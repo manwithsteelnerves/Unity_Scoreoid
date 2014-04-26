@@ -1,14 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public delegate void ScoreoidDelegate (ScoreoidResponse response);
 
 public class ScoreoidAPIHelper : MonoBehaviour
 {
-//For score submission
-		public void SubmitScore (int score, ScoreoidDelegate callback = null)
+		static ScoreoidAPIHelper s_sharedInstance = null;
+
+		public static ScoreoidAPIHelper GetSharedInstance()
 		{
-				SubmitScore (callback, new KeyValuePair (ScoreoidConstants.SCORE_KEY, score.ToString ()));	
+			if(s_sharedInstance == null)
+			{
+				GameObject go = new GameObject();
+				go.name = "ScoreoidAPIHelper";
+				ScoreoidAPIHelper helper = go.AddComponent<ScoreoidAPIHelper>();
+				s_sharedInstance = helper;
+			}
+			return s_sharedInstance;
+		}
+//For score submission
+		public void SubmitScore (string username,int score, ScoreoidDelegate callback = null)
+		{
+			SubmitScore (username,score.ToString(),callback);	
+		}
+	
+		public void SubmitScore (string username,string score, ScoreoidDelegate callback = null)
+		{
+				SubmitScore (callback, new KeyValuePair (ScoreoidConstants.SCORE_KEY, score),new KeyValuePair(ScoreoidConstants.USER_NAME_KEY,username));	
 		}
 	
 		public void SubmitScore (ScoreoidDelegate callback, params KeyValuePair[] fields)
@@ -41,9 +60,13 @@ public class ScoreoidAPIHelper : MonoBehaviour
 						form.AddField (each.key, each.value);
 				}
 		
-				Debug.Log ("Form data " + form.data);
+				Debug.Log ("Form data " + form.data.ToString());
 		
 				ScoreoidRequestHandler.StartScoreoidRequest (ScoreoidConstants.GET_SCORES_URL, form, callback);
 		}
-
+		
+		void OnDestroy()
+		{
+			s_sharedInstance = null;
+		}
 }

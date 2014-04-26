@@ -30,7 +30,7 @@ public class ScoreoidRequestHandler : MonoBehaviour
 	IEnumerator WaitForRequest(WWW www)
 	{
 		yield return www;
-	
+		Debug.Log("www...");
 		/* Check for errors */
 		if (www.error == null)
 		{
@@ -39,7 +39,6 @@ public class ScoreoidRequestHandler : MonoBehaviour
 			if(m_callback != null)
 			{
 				ScoreoidResponse response = new ScoreoidResponse(www.text);
-			
 				m_callback(response);
 			}
 

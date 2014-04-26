@@ -4,8 +4,8 @@ using System.Collections;
 public class ScoreoidConstants 
 {
 	//API calls
-	public static string CREATE_SCORE_URL 		= "https://www.scoreoid.com/api/createScore";
-	public static string GET_SCORES_URL		= "https://www.scoreoid.com/api/getScores";
+	public static string CREATE_SCORE_URL 		= "http://www.scoreoid.com/api/createScore";
+	public static string GET_SCORES_URL		= "http://www.scoreoid.com/api/getScores";
 	
 	
 	//Field constants

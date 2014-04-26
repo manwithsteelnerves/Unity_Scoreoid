@@ -1,21 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using SimpleJSON;
 
 public class ScoreoidResponse
 {
-	string m_data;
-	ScoreoidPlayer	 m_playerData;
-	ScoreoidScore 	 m_scoreData;
+	JSONNode m_jsonNode;
 
 	public ScoreoidResponse(string responseData)
 	{
-		//Parse the json string here and deserialize into required classes [ScoreoidPlayer,ScoreoidScore]
+		LoadData(responseData);
 	}
 	
-	public ScoreoidPlayer GetPlayer()
+
+	//This class can be used to convert to required info
+	public ScoreoidScoreEntry[] ParseScores()
 	{
-		ScoreoidPlayer player;
-		return player;
+		ScoreoidScoreEntry[] entries = new ScoreoidScoreEntry[m_jsonNode.Count];
+		
+		int i = 0;
+		foreach(JSONNode eachNode in m_jsonNode.AsArray)
+		{
+			entries[i] = new ScoreoidScoreEntry(eachNode["Player"],eachNode["Score"]);
+			i++;
+		}
+		
+		return entries;
 	}
 
+	void LoadData(string responseData)
+	{
+		m_jsonNode = JSONNode.Parse(responseData);
+	}
 }
